@@ -1,11 +1,14 @@
-import type { NextPage } from 'next';
+import { GetStaticProps } from 'next';
+import Header from '../components/Header';
 
-const Home: NextPage = () => {
-  return (
-    <div>
-      <h1> salve</h1>
-    </div>
-  );
+const Home = () => {
+  return <Header />;
+};
+
+const getStaticProps: GetStaticProps = (context) => {
+  return {
+    props: {},
+  };
 };
 
 export default Home;

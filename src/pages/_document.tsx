@@ -18,7 +18,7 @@ class MyDocument extends Document {
   }
 }
 
-MyDocument.getInitialProps = async (ctx) => {
+MyDocument.getInitialProps = async (ctx: DocumentContext) => {
   const sheets = new ServerStyleSheets();
   const originalRenderPage = ctx.renderPage;
   ctx.renderPage = () =>
