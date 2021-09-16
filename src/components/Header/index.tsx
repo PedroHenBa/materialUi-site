@@ -6,17 +6,15 @@ import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';
 
 interface Props {
-  window?: () => Window;
   children: React.ReactElement;
 }
 
 function ElevationScroll(props: Props) {
-  const { children, window } = props;
+  const { children } = props;
 
   const trigger = useScrollTrigger({
     disableHysteresis: true,
     threshold: 0,
-    target: window ? window() : undefined,
   });
 
   return React.cloneElement(children, {
@@ -28,11 +26,12 @@ const Header: FC = (props) => {
   return (
     <>
       <ElevationScroll {...props}>
-        <AppBar>
+        <AppBar position="fixed" color="primary">
           <Toolbar>Arc Development</Toolbar>
         </AppBar>
       </ElevationScroll>
       <Toolbar />
+
       <Container>
         <Box my={2}>
           {[...new Array(100)]
