@@ -1,9 +1,11 @@
 import React, { FC } from 'react';
+import { useStyles } from './styles';
+import logoIcon from '../../../public/assets/logo.svg';
+import Image from 'next/image';
+
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import useScrollTrigger from '@material-ui/core/useScrollTrigger';
-import Box from '@material-ui/core/Box';
-import Container from '@material-ui/core/Container';
 
 interface Props {
   children: React.ReactElement;
@@ -23,27 +25,18 @@ function ElevationScroll(props: Props) {
 }
 
 const Header: FC = (props) => {
+  const classes = useStyles();
   return (
     <>
       <ElevationScroll {...props}>
         <AppBar position="fixed" color="primary">
-          <Toolbar>Arc Development</Toolbar>
+          <Toolbar disableGutters>
+            <Image src={logoIcon} alt="company logo" height={110} width={380} />
+          </Toolbar>
         </AppBar>
       </ElevationScroll>
-      <Toolbar />
-
-      <Container>
-        <Box my={2}>
-          {[...new Array(100)]
-            .map(
-              () => `Cras mattis consectetur purus sit amet fermentum.
-Cras justo odio, dapibus ac facilisis in, egestas eget quam.
-Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`,
-            )
-            .join('\n')}
-        </Box>
-      </Container>
+      <Toolbar className={classes.toolbarMargin} />
+      asdasddasdas
     </>
   );
 };
