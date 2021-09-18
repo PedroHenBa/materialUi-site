@@ -2,18 +2,18 @@
 ## Site
 
 <h4 align="center">
-	🚧  Em desenvolvimento  🚧
+	🚧  in development  🚧
 </h4>
 <p>
- Um site para aprender e melhorar habilidades com material-ui com nextJs e typescript.
+ A site to learning and improve skills with material-ui. Site made with material-ui, nextJs and typescript
 </p>
 
-### 🛠 Tecnologias
+### 🛠 Technologies
 
-As seguintes ferramentas foram usadas na construção do projeto:
+The following tools were used in the construction of the project:
 
 - [storybook](https://storybook.js.org/)
-- [Material-ui](https://styled-components.com/)
+- [Material-ui](https://mui.com/pt/)
 - [React](https://pt-br.reactjs.org/)
 - [NextJs](https://nextjs.org/)
 - [TypeScript](https://www.typescriptlang.org/)

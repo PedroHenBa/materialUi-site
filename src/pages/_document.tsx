@@ -7,9 +7,11 @@ class MyDocument extends Document {
     return (
       <Html>
         <Head>
-          <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
+          <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css?family=Pacifico|Raleway:100,400,400i,700|Roboto:300,400,500,700&display=swap"
+          />
           <link rel="shortcut icon" href="/assets/favicon.png" />
-          <title>Arc Development</title>
         </Head>
         <body>
           <Main />
