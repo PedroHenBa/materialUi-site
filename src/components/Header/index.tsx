@@ -1,13 +1,11 @@
 import React, { FC, useState } from 'react';
 import { useStyles } from './styles';
-import logoIcon from '../../../public/assets/logo.svg';
-import Image from 'next/image';
 
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import useScrollTrigger from '@material-ui/core/useScrollTrigger';
-import Tab from '@material-ui/core/Tab';
-import Tabs from '@material-ui/core/Tabs';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import useScrollTrigger from '@mui/material/useScrollTrigger';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
 
 interface Props {
   children: React.ReactElement;
@@ -46,11 +44,11 @@ const Header: FC = (props) => {
       <ElevationScroll {...props}>
         <AppBar position="fixed" color="primary">
           <Toolbar disableGutters>
-            <Image src={logoIcon} alt="company logo" height={110} width={380} />
+            <img src="/assets/logo.svg" alt="company logo" className={classes.logo} />
             <Tabs
               value={value}
+              textColor="inherit"
               onChange={handleChange}
-              textColor="secondary"
               aria-label="nav menu"
               className={classes.tabContainer}
             >

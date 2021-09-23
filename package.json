@@ -11,6 +11,7 @@
   "dependencies": {
     "@material-ui/core": "^5.0.0-beta.5",
     "@material-ui/styles": "^4.11.4",
+    "@mui/material": "^5.0.1",
     "next": "11.1.2",
     "react": "17.0.2",
     "react-dom": "17.0.2"

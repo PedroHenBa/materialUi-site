@@ -3,7 +3,7 @@ import { CSSProperties } from 'React';
 
 type Theme = typeof theme;
 
-declare module '@material-ui/core/styles' {
+declare module '@mui/material/styles' {
   interface Theme {
     status: {
       danger: string;
@@ -17,14 +17,14 @@ declare module '@material-ui/core/styles' {
   }
 }
 
-declare module '@material-ui/core/styles/createPalette' {
+declare module '@mui/material/styles/createPalette' {
   interface CommonColors {
     blue?: string;
     orange?: string;
   }
 }
 
-declare module '@material-ui/core/styles/createTypography' {
+declare module '@mui/material/styles/createTypography' {
   interface TypographyOptions {
     tab?: {
       fontFamily?: string;
