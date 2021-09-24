@@ -1,4 +1,11 @@
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles, styled } from '@material-ui/styles';
+import TabComponent, { TabProps } from '@mui/material/Tab';
+
+export const Tab = styled(({ ...other }: TabProps) => <TabComponent {...other} />)(({ theme }) => ({
+  minWidth: 10,
+  marginLeft: '20px',
+  ...theme.typography.tab,
+}));
 
 export const useStyles = makeStyles((theme) => ({
   toolbarMargin: {
@@ -8,12 +15,15 @@ export const useStyles = makeStyles((theme) => ({
   tabContainer: {
     marginLeft: 'auto',
   },
-  tab: {
-    minWidth: 10,
-    marginLeft: '25px',
-    ...theme.typography.tab,
-  },
   logo: {
-    height: '7em',
+    height: '8em',
+  },
+  logoContainer: {
+    padding: 0,
+  },
+  button: {
+    borderRadius: '50px',
+    margin: '0px 25px',
+    ...theme.typography.estimate,
   },
 }));

@@ -1,5 +1,6 @@
 import type { AppProps } from 'next/app';
 import { ThemeProvider } from '@material-ui/styles';
+import { ThemeProvider as ThemeProviderMui } from '@mui/material/styles';
 import { theme } from '../styles/theme';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import React from 'react';
@@ -17,8 +18,10 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Component {...pageProps} />
+      <ThemeProviderMui theme={theme}>
+        <CssBaseline />
+        <Component {...pageProps} />
+      </ThemeProviderMui>
     </ThemeProvider>
   );
 }

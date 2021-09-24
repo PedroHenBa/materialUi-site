@@ -32,6 +32,9 @@ declare module '@mui/material/styles/createTypography' {
       fontWeight?: number;
       fontSize?: string;
     };
+    estimate: {
+      [key: string]: string;
+    };
   }
 
   interface Typography {
@@ -40,6 +43,9 @@ declare module '@mui/material/styles/createTypography' {
       textTransform: CSSProperties.TextTransform;
       fontWeight: number;
       fontSize: string;
+    };
+    estimate: {
+      [key: string]: string;
     };
   }
 }
