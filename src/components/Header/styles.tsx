@@ -29,6 +29,7 @@ export const useStyles = makeStyles((theme) => ({
   menu: {
     backgroundColor: theme.palette.common.blue,
     color: theme.palette.common.white,
+    borderRadius: '0',
   },
   menuItem: {
     opacity: 0.7,

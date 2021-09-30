@@ -69,22 +69,37 @@ const Header: FC = (props) => {
   };
 
   useEffect(() => {
-    if (router.pathname === '/' && value !== 0) {
-      setValue(0);
-    } else if (router.pathname === '/services' && value !== 1) {
-      setValue(1);
-    } else if (router.pathname === '/revolution' && value !== 2) {
-      setValue(2);
-    } else if (router.pathname === '/about' && value !== 3) {
-      setValue(3);
-    } else if (router.pathname === '/contact' && value !== 4) {
-      setValue(4);
-    } else if (
-      router.pathname === '/customsoftware' ||
-      router.pathname === '/mobileapps' ||
-      router.pathname === '/websites'
-    ) {
-      setValue(1);
+    switch (router.pathname) {
+      case '/':
+        setValue(0);
+        break;
+      case '/services':
+        setSelectedIndex(0);
+        setValue(1);
+        break;
+      case '/revolution':
+        setValue(2);
+        break;
+      case '/about':
+        setValue(3);
+        break;
+      case '/contact':
+        setValue(4);
+        break;
+      case '/customsoftware':
+        setSelectedIndex(1);
+        setValue(1);
+        break;
+      case '/mobileapps':
+        setSelectedIndex(2);
+        setValue(1);
+        break;
+      case '/websites':
+        setSelectedIndex(3);
+        setValue(1);
+        break;
+      default:
+        setValue(0);
     }
   }, [value, router]);
 
