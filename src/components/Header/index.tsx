@@ -2,16 +2,22 @@ import React, { FC, useState, useEffect } from 'react';
 import { useStyles } from './styles';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { Tab } from './styles';
 
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import useScrollTrigger from '@mui/material/useScrollTrigger';
-import { Tab } from './styles';
 import Tabs from '@mui/material/Tabs';
-import Button from '@material-ui/core/Button';
+import Button from '@mui/material/Button';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 
-const nameTabs = ['Home', 'Services', 'The Revolution', 'About Us', 'Contact Us'];
-const routesTab = ['/', '/services', '/revolution', '/about', '/contact'];
+const tabServices = [
+  { name: 'Services', route: '/services' },
+  { name: 'Custom Software Development', route: '/customsoftware' },
+  { name: 'Mobile App Development', route: '/mobileapps' },
+  { name: 'Website Development', route: '/websites' },
+];
 
 interface Props {
   children: React.ReactElement;
@@ -38,21 +44,49 @@ function a11yProps(index: number) {
 }
 
 const Header: FC = (props) => {
-  const [value, setValue] = useState<number>(0);
+  const [value, setValue] = useState(0);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
   const classes = useStyles();
   const router = useRouter();
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
-  const handleChange = (event: React.ChangeEvent<unknown>, newValue: number) => {
+  const handleServicesClick = (event: React.SyntheticEvent, index: number) => {
+    setSelectedIndex(index);
+    setAnchorEl(null);
+  };
+
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
   useEffect(() => {
-    const index = routesTab.indexOf(router.pathname);
-    if (index) {
-      setValue(index);
+    if (router.pathname === '/' && value !== 0) {
+      setValue(0);
+    } else if (router.pathname === '/services' && value !== 1) {
+      setValue(1);
+    } else if (router.pathname === '/revolution' && value !== 2) {
+      setValue(2);
+    } else if (router.pathname === '/about' && value !== 3) {
+      setValue(3);
+    } else if (router.pathname === '/contact' && value !== 4) {
+      setValue(4);
+    } else if (
+      router.pathname === '/customsoftware' ||
+      router.pathname === '/mobileapps' ||
+      router.pathname === '/websites'
+    ) {
+      setValue(1);
     }
-    console.log('worked, well, i think');
-  }, [router]);
+  }, [value, router]);
 
   return (
     <>
@@ -64,27 +98,62 @@ const Header: FC = (props) => {
                 <img src="/assets/logo.svg" alt="company logo" className={classes.logo} />
               </Button>
             </Link>
+
             <Tabs
               value={value}
-              textColor="inherit"
               onChange={handleChange}
+              textColor="inherit"
               aria-label="nav menu"
               className={classes.tabContainer}
             >
-              {nameTabs.map((name, index) => (
-                <Tab
-                  key={`id-${name}`}
-                  label={name}
-                  {...a11yProps(index)}
-                  onClick={() => router.push(`${routesTab[index]}`)}
-                />
-              ))}
+              <Tab label="Home" {...a11yProps(0)} onClick={() => router.push(`/`)} />
+              <Tab
+                {...a11yProps(1)}
+                label="Services"
+                id="tab-services"
+                aria-haspopup="true"
+                aria-controls="menu-services"
+                aria-expanded={open ? 'true' : undefined}
+                onMouseOver={(e) => handleClick(e)}
+              />
+              <Tab label="The Revolution" {...a11yProps(2)} onClick={() => router.push(`/revolution`)} />
+              <Tab label="About Us" {...a11yProps(3)} onClick={() => router.push(`/about`)} />
+              <Tab label="Contact Us" {...a11yProps(4)} onClick={() => router.push(`/contact`)} />
             </Tabs>
+
             <Link href="/estimate">
               <Button variant="contained" color="secondary" className={classes.button}>
                 Free estimate
               </Button>
             </Link>
+
+            <Menu
+              id="menu-services"
+              open={open}
+              anchorEl={anchorEl}
+              onClose={handleClose}
+              classes={{ paper: classes.menu }}
+              MenuListProps={{
+                'aria-labelledby': 'tab-services',
+                onMouseLeave: handleClose,
+              }}
+            >
+              {tabServices.map((tab, index) => (
+                <Link key={`key-${tab.route}`} href={tab.route} shallow={true}>
+                  <MenuItem
+                    selected={index === selectedIndex && value === 1}
+                    key={`key-${tab.route}`}
+                    onClick={(event) => {
+                      handleServicesClick(event, index);
+                      setValue(1);
+                    }}
+                    classes={{ root: classes.menuItem }}
+                  >
+                    {tab.name}
+                  </MenuItem>
+                </Link>
+              ))}
+            </Menu>
           </Toolbar>
         </AppBar>
       </ElevationScroll>
