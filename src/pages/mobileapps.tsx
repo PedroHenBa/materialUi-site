@@ -4,7 +4,7 @@ const MobileApps = () => {
   return (
     <>
       <Header />
-      <h1>MobileApps</h1>
+      <p>MobileApps</p>
     </>
   );
 };

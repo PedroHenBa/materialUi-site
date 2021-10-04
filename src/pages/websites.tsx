@@ -4,7 +4,7 @@ const WebSites = () => {
   return (
     <>
       <Header />
-      <h1>WebSites</h1>
+      <p>WebSites</p>
     </>
   );
 };

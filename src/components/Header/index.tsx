@@ -11,6 +11,15 @@ import Tabs from '@mui/material/Tabs';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import SwipeableDrawer from '@mui/material/SwipeableDrawer';
+import IconButton from '@mui/material/IconButton';
+import List from '@mui/material/List';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemText from '@mui/material/ListItemText';
+
+import MenuIcon from '@material-ui/icons/Menu';
 
 const tabServices = [
   { name: 'Services', route: '/services' },
@@ -46,10 +55,16 @@ function a11yProps(index: number) {
 const Header: FC = (props) => {
   const [value, setValue] = useState(0);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-  const classes = useStyles();
-  const router = useRouter();
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [openDrawer, setOpenDrawer] = useState(false);
+
+  const theme = useTheme();
+  const router = useRouter();
+  const matches = useMediaQuery(theme.breakpoints.down('lg'));
+
+  const openServiceMenu = Boolean(anchorEl);
+  const classes = useStyles();
+  const iOS = typeof navigator !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent);
 
   const handleServicesClick = (event: React.SyntheticEvent, index: number) => {
     setSelectedIndex(index);
@@ -86,6 +101,9 @@ const Header: FC = (props) => {
       case '/contact':
         setValue(4);
         break;
+      case '/estimate':
+        setValue(5);
+        break;
       case '/customsoftware':
         setSelectedIndex(1);
         setValue(1);
@@ -103,6 +121,142 @@ const Header: FC = (props) => {
     }
   }, [value, router]);
 
+  const tabs = (
+    <>
+      <Tabs
+        value={value}
+        onChange={handleChange}
+        textColor="inherit"
+        aria-label="nav menu"
+        className={classes.tabContainer}
+      >
+        <Tab label="Home" {...a11yProps(0)} onClick={() => router.push(`/`)} />
+        <Tab
+          {...a11yProps(1)}
+          label="Services"
+          id="tab-services"
+          aria-haspopup="true"
+          aria-controls="menu-services"
+          aria-expanded={openServiceMenu ? 'true' : undefined}
+          onMouseOver={(e) => handleClick(e)}
+        />
+        <Tab label="The Revolution" {...a11yProps(2)} onClick={() => router.push(`/revolution`)} />
+        <Tab label="About Us" {...a11yProps(3)} onClick={() => router.push(`/about`)} />
+        <Tab label="Contact Us" {...a11yProps(4)} onClick={() => router.push(`/contact`)} />
+      </Tabs>
+      <Button variant="contained" color="secondary" className={classes.button} onClick={() => router.push(`/estimate`)}>
+        Free estimate
+      </Button>
+
+      <Menu
+        id="menu-services"
+        open={openServiceMenu}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        classes={{ paper: classes.menu }}
+        MenuListProps={{
+          'aria-labelledby': 'tab-services',
+          onMouseLeave: handleClose,
+        }}
+      >
+        {tabServices.map((tab, index) => (
+          <Link key={`key-${tab.route}`} href={tab.route} shallow={true}>
+            <MenuItem
+              selected={index === selectedIndex && value === 1}
+              key={`key-${tab.route}`}
+              onClick={(event) => {
+                handleServicesClick(event, index);
+                setValue(1);
+              }}
+              classes={{ root: classes.menuItem }}
+            >
+              {tab.name}
+            </MenuItem>
+          </Link>
+        ))}
+      </Menu>
+    </>
+  );
+
+  const drawer = (
+    <>
+      <SwipeableDrawer
+        disableBackdropTransition={!iOS}
+        disableDiscovery={iOS}
+        open={openDrawer}
+        onClose={() => setOpenDrawer(false)}
+        onOpen={() => setOpenDrawer(true)}
+        classes={{ paper: classes.drawer }}
+      >
+        <List component="nav" aria-label="mobile-Menu" disablePadding>
+          <Link href="/">
+            <ListItemButton
+              className={classes.drawerItem}
+              divider
+              selected={value === 0}
+              onClick={(event) => handleChange(event, 0)}
+            >
+              <ListItemText disableTypography primary="Home" />
+            </ListItemButton>
+          </Link>
+          <Link href="/services">
+            <ListItemButton
+              className={classes.drawerItem}
+              divider
+              selected={value === 1}
+              onClick={(event) => handleChange(event, 1)}
+            >
+              <ListItemText disableTypography primary="Services" />
+            </ListItemButton>
+          </Link>
+          <Link href="/revolution">
+            <ListItemButton
+              className={classes.drawerItem}
+              divider
+              selected={value === 2}
+              onClick={(event) => handleChange(event, 2)}
+            >
+              <ListItemText disableTypography primary="The Revolution" />
+            </ListItemButton>
+          </Link>
+          <Link href="/about">
+            <ListItemButton
+              className={classes.drawerItem}
+              divider
+              selected={value === 3}
+              onClick={(event) => handleChange(event, 3)}
+            >
+              <ListItemText disableTypography primary="About Us" />
+            </ListItemButton>
+          </Link>
+          <Link href="/contact">
+            <ListItemButton
+              className={classes.drawerItem}
+              divider
+              selected={value === 4}
+              onClick={(event) => handleChange(event, 4)}
+            >
+              <ListItemText disableTypography primary="Contact Us" />
+            </ListItemButton>
+          </Link>
+          <Link href="/estimate">
+            <ListItemButton
+              divider
+              className={`${classes.drawerItemEstimate} ${classes.drawerItem}`}
+              selected={value === 5}
+              onClick={(event) => handleChange(event, 5)}
+            >
+              <ListItemText disableTypography primary="Free estimate" />
+            </ListItemButton>
+          </Link>
+        </List>
+      </SwipeableDrawer>
+      <IconButton className={classes.drawerIconContainer} onClick={() => setOpenDrawer(!openDrawer)} disableRipple>
+        <MenuIcon className={classes.drawerMenuIcon} />
+      </IconButton>
+    </>
+  );
+
   return (
     <>
       <ElevationScroll {...props}>
@@ -113,62 +267,7 @@ const Header: FC = (props) => {
                 <img src="/assets/logo.svg" alt="company logo" className={classes.logo} />
               </Button>
             </Link>
-
-            <Tabs
-              value={value}
-              onChange={handleChange}
-              textColor="inherit"
-              aria-label="nav menu"
-              className={classes.tabContainer}
-            >
-              <Tab label="Home" {...a11yProps(0)} onClick={() => router.push(`/`)} />
-              <Tab
-                {...a11yProps(1)}
-                label="Services"
-                id="tab-services"
-                aria-haspopup="true"
-                aria-controls="menu-services"
-                aria-expanded={open ? 'true' : undefined}
-                onMouseOver={(e) => handleClick(e)}
-              />
-              <Tab label="The Revolution" {...a11yProps(2)} onClick={() => router.push(`/revolution`)} />
-              <Tab label="About Us" {...a11yProps(3)} onClick={() => router.push(`/about`)} />
-              <Tab label="Contact Us" {...a11yProps(4)} onClick={() => router.push(`/contact`)} />
-            </Tabs>
-
-            <Link href="/estimate">
-              <Button variant="contained" color="secondary" className={classes.button}>
-                Free estimate
-              </Button>
-            </Link>
-
-            <Menu
-              id="menu-services"
-              open={open}
-              anchorEl={anchorEl}
-              onClose={handleClose}
-              classes={{ paper: classes.menu }}
-              MenuListProps={{
-                'aria-labelledby': 'tab-services',
-                onMouseLeave: handleClose,
-              }}
-            >
-              {tabServices.map((tab, index) => (
-                <Link key={`key-${tab.route}`} href={tab.route} shallow={true}>
-                  <MenuItem
-                    selected={index === selectedIndex && value === 1}
-                    key={`key-${tab.route}`}
-                    onClick={(event) => {
-                      handleServicesClick(event, index);
-                      setValue(1);
-                    }}
-                    classes={{ root: classes.menuItem }}
-                  >
-                    {tab.name}
-                  </MenuItem>
-                </Link>
-              ))}
-            </Menu>
+            {matches ? drawer : tabs}
           </Toolbar>
         </AppBar>
       </ElevationScroll>

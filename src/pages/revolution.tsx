@@ -4,7 +4,7 @@ const Revolution = () => {
   return (
     <>
       <Header />
-      <h1>Revolution</h1>
+      <p>Revolution</p>
     </>
   );
 };

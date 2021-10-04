@@ -5,6 +5,9 @@ const arcOrange = '#FFBA60';
 
 export const theme = createTheme({
   palette: {
+    action: {
+      hover: 'rgba(0,0,0,0.09)',
+    },
     common: {
       blue: arcBlue,
       orange: arcOrange,

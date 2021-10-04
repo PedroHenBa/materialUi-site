@@ -4,7 +4,7 @@ const CustomSoftware = () => {
   return (
     <>
       <Header />
-      <h1>CustomSoftware</h1>
+      <p>CustomSoftware</p>
     </>
   );
 };

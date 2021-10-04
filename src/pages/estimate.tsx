@@ -4,7 +4,7 @@ const Estimate = () => {
   return (
     <>
       <Header />
-      <h1>Estimate</h1>
+      <p>Estimate</p>
     </>
   );
 };
