@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC, useState, useEffect, useRef } from 'react';
 import { useStyles } from './styles';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -21,13 +21,6 @@ import ListItemText from '@mui/material/ListItemText';
 
 import MenuIcon from '@material-ui/icons/Menu';
 
-const tabServices = [
-  { name: 'Services', route: '/services' },
-  { name: 'Custom Software Development', route: '/customsoftware' },
-  { name: 'Mobile App Development', route: '/mobileapps' },
-  { name: 'Website Development', route: '/websites' },
-];
-
 interface Props {
   children: React.ReactElement;
 }
@@ -43,13 +36,6 @@ function ElevationScroll(props: Props) {
   return React.cloneElement(children, {
     elevation: trigger ? 4 : 0,
   });
-}
-
-function a11yProps(index: number) {
-  return {
-    id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
-  };
 }
 
 const Header: FC = (props) => {
@@ -83,43 +69,48 @@ const Header: FC = (props) => {
     setValue(newValue);
   };
 
+  const tabServices = useRef([
+    { name: 'Services', route: '/services', value: 1 },
+    { name: 'Custom Software Development', route: '/customsoftware', index: 0 },
+    { name: 'Mobile App Development', route: '/mobileapps', index: 1 },
+    { name: 'Website Development', route: '/websites', index: 2 },
+  ]);
+
+  const menuItems = useRef([
+    { name: 'Home', route: '/', value: 0 },
+    {
+      name: 'Services',
+      route: '/services',
+      value: 1,
+      ariaHaspopup: openServiceMenu ? true : undefined,
+      ariaControls: 'menu-services',
+      ariaExpanded: openServiceMenu ? true : undefined,
+      onMouseOver: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => handleClick(e),
+      id: 'tab-services',
+    },
+    { name: 'The Revolution', route: '/revolution', value: 2 },
+    { name: 'About Us', route: '/about', value: 3 },
+    { name: 'Contact Us', route: '/contact', value: 4 },
+  ]);
+
   useEffect(() => {
-    switch (router.pathname) {
-      case '/':
-        setValue(0);
-        break;
-      case '/services':
-        setSelectedIndex(0);
-        setValue(1);
-        break;
-      case '/revolution':
-        setValue(2);
-        break;
-      case '/about':
-        setValue(3);
-        break;
-      case '/contact':
-        setValue(4);
-        break;
-      case '/estimate':
-        setValue(5);
-        break;
-      case '/customsoftware':
-        setSelectedIndex(1);
-        setValue(1);
-        break;
-      case '/mobileapps':
-        setSelectedIndex(2);
-        setValue(1);
-        break;
-      case '/websites':
-        setSelectedIndex(3);
-        setValue(1);
-        break;
-      default:
-        setValue(0);
-    }
-  }, [value, router]);
+    [...tabServices.current, ...menuItems.current].forEach((itemMenu) => {
+      if (router.pathname === itemMenu.route) {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        if (itemMenu?.index) {
+          setValue(1);
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          setSelectedIndex(itemMenu.index);
+          return;
+        } else {
+          setValue(itemMenu.value as number);
+          return;
+        }
+      }
+    });
+  }, [value, router, tabServices, menuItems]);
 
   const tabs = (
     <>
@@ -130,19 +121,20 @@ const Header: FC = (props) => {
         aria-label="nav menu"
         className={classes.tabContainer}
       >
-        <Tab label="Home" {...a11yProps(0)} onClick={() => router.push(`/`)} />
-        <Tab
-          {...a11yProps(1)}
-          label="Services"
-          id="tab-services"
-          aria-haspopup="true"
-          aria-controls="menu-services"
-          aria-expanded={openServiceMenu ? 'true' : undefined}
-          onMouseOver={(e) => handleClick(e)}
-        />
-        <Tab label="The Revolution" {...a11yProps(2)} onClick={() => router.push(`/revolution`)} />
-        <Tab label="About Us" {...a11yProps(3)} onClick={() => router.push(`/about`)} />
-        <Tab label="Contact Us" {...a11yProps(4)} onClick={() => router.push(`/contact`)} />
+        {menuItems.current.map((menuItem) => {
+          return (
+            <Tab
+              key={`id-${menuItem.name}`}
+              label={menuItem.name}
+              onClick={() => router.push(`${menuItem.route}`)}
+              id={menuItem.id}
+              aria-haspopup={menuItem.ariaHaspopup}
+              aria-controls={menuItem.ariaControls}
+              aria-expanded={menuItem.ariaExpanded}
+              onMouseOver={() => menuItem.onMouseOver}
+            />
+          );
+        })}
       </Tabs>
       <Button variant="contained" color="secondary" className={classes.button} onClick={() => router.push(`/estimate`)}>
         Free estimate
@@ -158,9 +150,10 @@ const Header: FC = (props) => {
           'aria-labelledby': 'tab-services',
           onMouseLeave: handleClose,
         }}
+        keepMounted
       >
-        {tabServices.map((tab, index) => (
-          <Link key={`key-${tab.route}`} href={tab.route} shallow={true}>
+        {tabServices.current.map((tab, index) => (
+          <Link key={`id-${tab.route}`} href={tab.route} shallow={true}>
             <MenuItem
               selected={index === selectedIndex && value === 1}
               key={`key-${tab.route}`}
@@ -188,57 +181,22 @@ const Header: FC = (props) => {
         onOpen={() => setOpenDrawer(true)}
         classes={{ paper: classes.drawer }}
       >
+        <div className={classes.toolbarMargin} />
         <List component="nav" aria-label="mobile-Menu" disablePadding>
-          <Link href="/">
-            <ListItemButton
-              className={classes.drawerItem}
-              divider
-              selected={value === 0}
-              onClick={(event) => handleChange(event, 0)}
-            >
-              <ListItemText disableTypography primary="Home" />
-            </ListItemButton>
-          </Link>
-          <Link href="/services">
-            <ListItemButton
-              className={classes.drawerItem}
-              divider
-              selected={value === 1}
-              onClick={(event) => handleChange(event, 1)}
-            >
-              <ListItemText disableTypography primary="Services" />
-            </ListItemButton>
-          </Link>
-          <Link href="/revolution">
-            <ListItemButton
-              className={classes.drawerItem}
-              divider
-              selected={value === 2}
-              onClick={(event) => handleChange(event, 2)}
-            >
-              <ListItemText disableTypography primary="The Revolution" />
-            </ListItemButton>
-          </Link>
-          <Link href="/about">
-            <ListItemButton
-              className={classes.drawerItem}
-              divider
-              selected={value === 3}
-              onClick={(event) => handleChange(event, 3)}
-            >
-              <ListItemText disableTypography primary="About Us" />
-            </ListItemButton>
-          </Link>
-          <Link href="/contact">
-            <ListItemButton
-              className={classes.drawerItem}
-              divider
-              selected={value === 4}
-              onClick={(event) => handleChange(event, 4)}
-            >
-              <ListItemText disableTypography primary="Contact Us" />
-            </ListItemButton>
-          </Link>
+          {menuItems.current.map((menuItem, index) => {
+            return (
+              <Link href={menuItem.route} key={`id-${menuItem.name}`}>
+                <ListItemButton
+                  className={classes.drawerItem}
+                  divider
+                  selected={value === menuItem.value}
+                  onClick={(event) => handleChange(event, menuItem.value)}
+                >
+                  <ListItemText disableTypography primary={menuItem.name} />
+                </ListItemButton>
+              </Link>
+            );
+          })}
           <Link href="/estimate">
             <ListItemButton
               divider
@@ -260,7 +218,7 @@ const Header: FC = (props) => {
   return (
     <>
       <ElevationScroll {...props}>
-        <AppBar position="fixed" color="primary">
+        <AppBar position="fixed" color="primary" className={classes.appBar}>
           <Toolbar disableGutters>
             <Link href="/">
               <Button className={classes.logoContainer} disableRipple>

@@ -85,4 +85,7 @@ export const useStyles = makeStyles((theme) => ({
   drawerItemEstimate: {
     backgroundColor: theme.palette.common.orange,
   },
+  appBar: {
+    zIndex: theme.zIndex.modal + 1,
+  },
 }));
